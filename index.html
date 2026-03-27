@@ -1,129 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Berri Client</title>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>Berri Client</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      background: linear-gradient(135deg, #3a3aff, #8a2be2);
-      color: white;
-      transition: background 0.4s;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
-    .sidebar {
-      width: 220px;
-      background: rgba(20, 20, 40, 0.95);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 4px 0 20px rgba(0,0,0,0.5);
-    }
+  body {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(135deg, #3a3aff, #8a2be2);
+    color: #fff;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
 
-    .sidebar h2 { margin-bottom: 20px; }
+  /* Sidebar */
+  .sidebar {
+    width: 60px;
+    background: rgba(20,20,40,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    transition: width 0.3s;
+    overflow: hidden;
+  }
 
-    .sidebar button {
-      margin: 8px 0;
-      padding: 12px;
-      background: #1f1f3a;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
+  .sidebar.expanded { width: 220px; }
 
-    .sidebar button:hover {
-      transform: translateX(6px);
-      background: #2a2a5a;
-    }
+  .sidebar h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+  }
 
-    .content { flex: 1; padding: 30px; }
+  .sidebar button {
+    width: 90%;
+    margin: 10px 0;
+    padding: 12px;
+    background: #1f1f3a;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-    .tab { display: none; animation: fadeIn 0.3s ease; }
+  .sidebar button:hover { background: #2a2a5a; transform: translateX(5px); }
 
-    .tab.active { display: block; }
+  /* Content */
+  .content {
+    flex: 1;
+    padding: 30px;
+    position: relative;
+  }
 
-    .content button {
-      padding: 12px 18px;
-      margin: 8px;
-      background: #3a3aff;
-      border: none;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+  /* Panels */
+  .panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(30,30,60,0.9);
+    border-radius: 12px;
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    transition: all 0.3s;
+  }
 
-    .content button:hover { transform: scale(1.05); }
+  .panel.active { display: flex; }
 
-    @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+  .panel h1 { margin-bottom: 15px; font-size: 24px; }
 
-    /* Themes */
-    .theme-blue { background: #0a0a2a; }
-    .theme-yellow { background: #2a2a00; }
-    .theme-red { background: #2a0000; }
-    .theme-orange { background: #2a1400; }
-    .theme-black { background: #000000; }
-    .theme-default { background: linear-gradient(135deg, #3a3aff, #8a2be2); }
-  </style>
+  .panel button {
+    width: fit-content;
+    background: #3a3aff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .panel button:hover { transform: scale(1.05); }
+
+  /* Themes */
+  .theme-blue { background: #0a0a2a; }
+  .theme-yellow { background: #2a2a00; }
+  .theme-red { background: #2a0000; }
+  .theme-orange { background: #2a1400; }
+  .theme-black { background: #000; }
+  .theme-default { background: linear-gradient(135deg, #3a3aff, #8a2be2); }
+</style>
 </head>
-
 <body class="theme-default">
 
-  <div class="sidebar">
-    <h2>🫐 Berri</h2>
-    <button onclick="openTab('versions')">Versions</button>
-    <button onclick="openTab('mods')">Mods</button>
-    <button onclick="openTab('themes')">Themes</button>
+<div class="sidebar" id="sidebar">
+  <h2>🫐 Berri</h2>
+  <button onclick="toggleSidebar()">☰</button>
+  <button onclick="openPanel('versions')">Versions</button>
+  <button onclick="openPanel('mods')">Mods</button>
+  <button onclick="openPanel('themes')">Themes</button>
+</div>
+
+<div class="content">
+  <div id="versions" class="panel active">
+    <h1>Select Version</h1>
+    <button onclick="launchVersion('versions/1.5.2.html')">1.5.2</button>
+    <button onclick="launchVersion('versions/1.8.8.html')">1.8.8</button>
+    <button onclick="launchVersion('versions/1.12.html')">1.12</button>
   </div>
 
-  <div class="content">
-    <div id="versions" class="tab active">
-      <h1>Versions</h1>
-      <button onclick="launchVersion('versions/1.5.2.html')">1.5.2</button>
-      <button onclick="launchVersion('versions/1.8.8.html')">1.8.8</button>
-      <button onclick="launchVersion('versions/1.12.html')">1.12</button>
-    </div>
-
-    <div id="mods" class="tab">
-      <h1>Mods</h1>
-      <button onclick="openMods()">Open Mod Site</button>
-      <p>🚧 Mod Launcher: Work in Progress</p>
-    </div>
-
-    <div id="themes" class="tab">
-      <h1>Themes</h1>
-      <button onclick="setTheme('default')">Default</button>
-      <button onclick="setTheme('blue')">Blue</button>
-      <button onclick="setTheme('yellow')">Yellow</button>
-      <button onclick="setTheme('red')">Red</button>
-      <button onclick="setTheme('orange')">Orange</button>
-      <button onclick="setTheme('black')">Black</button>
-    </div>
+  <div id="mods" class="panel">
+    <h1>Mods</h1>
+    <button onclick="openMods()">Open Mod Site</button>
+    <p>🚧 Mod Launcher: Work in Progress</p>
   </div>
 
-  <script>
-    function openTab(tabName){
-      document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
-      document.getElementById(tabName).classList.add('active');
-    }
+  <div id="themes" class="panel">
+    <h1>Themes</h1>
+    <button onclick="setTheme('default')">Default</button>
+    <button onclick="setTheme('blue')">Blue</button>
+    <button onclick="setTheme('yellow')">Yellow</button>
+    <button onclick="setTheme('red')">Red</button>
+    <button onclick="setTheme('orange')">Orange</button>
+    <button onclick="setTheme('black')">Black</button>
+  </div>
+</div>
 
-    function launchVersion(path){ window.location.href = path; }
-    function openMods(){ window.open("https://eaglerrinth.github.io/", "_blank"); }
-    function setTheme(theme){
-      document.body.className = "theme-" + theme;
-      localStorage.setItem("berri-theme", theme);
-    }
+<script>
+  function openPanel(id){
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
 
-    window.onload = ()=>{
-      let saved = localStorage.getItem("berri-theme");
-      if(saved) document.body.className = "theme-" + saved;
-    }
-  </script>
+  function launchVersion(path){
+    window.location.href = path;
+  }
+
+  function openMods(){
+    window.open("https://eaglerrinth.github.io/", "_blank");
+  }
+
+  function setTheme(theme){
+    document.body.className = "theme-" + theme;
+    localStorage.setItem("berri-theme", theme);
+  }
+
+  window.onload = ()=>{
+    let saved = localStorage.getItem("berri-theme");
+    if(saved) document.body.className = "theme-" + saved;
+  }
+
+  function toggleSidebar(){
+    document.getElementById('sidebar').classList.toggle('expanded');
+  }
+</script>
 
 </body>
 </html>
