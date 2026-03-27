@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Berri Client</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-default">
+
+<div class="sidebar">
+  <h2>Berri</h2>
+
+  <button onclick="openTab('versions')">Versions</button>
+  <button onclick="openTab('mods')">Mods</button>
+  <button onclick="openTab('themes')">Themes</button>
+</div>
+
+<div class="content">
+
+  <!-- Versions -->
+  <div id="versions" class="tab active">
+    <h1>Versions</h1>
+
+    <button onclick="launchVersion('versions/1.5.2.html')">1.5.2</button>
+    <button onclick="launchVersion('versions/1.8.8.html')">1.8.8</button>
+    <button onclick="launchVersion('versions/1.12.html')">1.12</button>
+  </div>
+
+  <!-- Mods -->
+  <div id="mods" class="tab">
+    <h1>Mods</h1>
+
+    <button onclick="openMods()">Open Mod Site</button>
+
+    <p>Mod Launcher: Work in Progress</p>
+  </div>
+
+  <!-- Themes -->
+  <div id="themes" class="tab">
+    <h1>Themes</h1>
+
+    <button onclick="setTheme('default')">Default (Blue/Purple)</button>
+    <button onclick="setTheme('blue')">Blue</button>
+    <button onclick="setTheme('yellow')">Yellow</button>
+    <button onclick="setTheme('red')">Red</button>
+    <button onclick="setTheme('orange')">Orange</button>
+    <button onclick="setTheme('black')">Black</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
