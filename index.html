@@ -1,172 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Berri Client</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Berri Launcher</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+:root{
+  --accent-1: #3a3aff;
+  --accent-2: #8a2be2;
+  --muted: #9aa7b3;
+}
 
-  body {
-    display: flex;
-    height: 100vh;
-    background: linear-gradient(135deg, #3a3aff, #8a2be2);
-    color: #fff;
-    overflow: hidden;
-    transition: background 0.3s;
-  }
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef6}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:28px;
+  -webkit-font-smoothing:antialiased;
+  background: url('https://images2.alphacoders.com/123/thumb-1920-1232557.png') no-repeat center center;
+  background-size: cover;
+}
 
-  /* Sidebar */
-  .sidebar {
-    width: 60px;
-    background: rgba(20,20,40,0.95);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 0;
-    transition: width 0.3s;
-    overflow: hidden;
-  }
+.shell{
+  width:980px;
+  max-width:98vw;
+  height:700px;
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, rgba(12,12,14,0.72), rgba(6,6,8,0.72));
+}
 
-  .sidebar.expanded { width: 220px; }
+/* Sidebar */
+.sidebar{
+  width:220px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0));
+  border-right: 1px solid rgba(255,255,255,0.03);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.brand{ display:flex; gap:12px; align-items:center; }
+.logo{ width:56px;height:56px;border-radius:12px; background:linear-gradient(135deg,var(--accent-1),var(--accent-2)); display:flex;align-items:center;justify-content:center; flex-shrink:0; }
+.logo svg{ width:40px;height:40px; }
+.brand .title{ font-weight:700; font-size:16px; letter-spacing:0.2px; }
+.brand .sub{ font-size:11px; color:var(--muted); margin-top:3px; }
 
-  .sidebar h2 {
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 18px;
-  }
+nav.side-nav{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.nav-btn{
+  display:flex; gap:12px; align-items:center; padding:10px 12px; border-radius:10px;
+  cursor:pointer; color: #dfe9f8; font-weight:700; font-size:13px;
+  transition: transform 180ms cubic-bezier(.2,.9,.3,1), background 180ms;
+  border: 1px solid transparent;
+}
+.nav-btn:hover{ transform: translateX(6px); background: rgba(255,255,255,0.02); }
+.nav-btn.active{
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+}
+.nav-icon{ width:28px; height:28px; display:grid; place-items:center; font-size:16px; }
+.nav-label{ display:flex; flex-direction:column; line-height:1; }
+.nav-label .main{ font-weight:700; font-size:13px; }
+.nav-label .sub{ font-size:11px; color:var(--muted); margin-top:2px; }
 
-  .sidebar button {
-    width: 90%;
-    margin: 10px 0;
-    padding: 12px;
-    background: #1f1f3a;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.3s;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.spacer { flex:1 }
+.credits{ font-size:12px; color:var(--muted); text-align:center; padding-top:8px }
 
-  .sidebar button:hover { background: #2a2a5a; transform: translateX(5px); }
+/* Main */
+.main { flex:1; padding:28px; display:flex; flex-direction:column; gap:18px; position:relative; }
+.content { flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
+.card{ width:760px; max-width:calc(100% - 40px); border-radius:12px; padding:24px; background: linear-gradient(180deg, rgba(18,20,24,0.72), rgba(12,12,14,0.72)); box-shadow: 0 20px 60px rgba(8,10,12,0.6); border:1px solid rgba(255,255,255,0.02); transition: transform 280ms cubic-bezier(.2,.9,.3,1), opacity 200ms; }
 
-  /* Content */
-  .content {
-    flex: 1;
-    padding: 30px;
-    position: relative;
-  }
+/* Buttons */
+.play-btn{ display:inline-block; padding:14px 30px; font-weight:800; font-size:16px; border-radius:12px; color:white; cursor:pointer; border:none; background: linear-gradient(90deg,var(--accent-1),var(--accent-2)); box-shadow: 0 12px 40px rgba(0,0,0,0.45); transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms; }
+.play-btn:hover{ transform: translateY(-4px) scale(1.01); filter:brightness(1.03); }
+.play-btn:active{ transform: translateY(2px) scale(.997); }
 
-  /* Panels */
-  .panel {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    background: rgba(30,30,60,0.9);
-    border-radius: 12px;
-    padding: 20px;
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    overflow-y: auto;
-    transition: all 0.3s;
-  }
+/* Version buttons */
+.versions-grid{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+.ver-btn { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-radius:10px; cursor:pointer; background:rgba(255,255,255,0.02); transition: transform 140ms, box-shadow 140ms; border:1px solid rgba(255,255,255,0.02); font-weight:700; opacity:0; transform: translateX(-12px);}
+.ver-btn.fade-in{ opacity:1; transform: translateX(0); transition: opacity 350ms ease, transform 350ms ease; }
+.ver-btn:hover{ transform: translateX(4px); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+.ver-btn.selected{ outline: 2px solid rgba(255,255,255,0.04); box-shadow: 0 14px 40px rgba(0,0,0,0.5); }
 
-  .panel.active { display: flex; }
-
-  .panel h1 { margin-bottom: 15px; font-size: 24px; }
-
-  .panel button {
-    width: fit-content;
-    background: #3a3aff;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-
-  .panel button:hover { transform: scale(1.05); }
-
-  /* Themes */
-  .theme-blue { background: #0a0a2a; }
-  .theme-yellow { background: #2a2a00; }
-  .theme-red { background: #2a0000; }
-  .theme-orange { background: #2a1400; }
-  .theme-black { background: #000; }
-  .theme-default { background: linear-gradient(135deg, #3a3aff, #8a2be2); }
+/* Loading overlay */
+.loading-overlay{ position: absolute; inset:0; display:grid; place-items:center; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index:40; opacity:0; pointer-events:none; transition: opacity 260ms; }
+.loading-overlay.show{ opacity:1; pointer-events:auto; }
+.loader-card { padding:26px; border-radius:12px; background: linear-gradient(180deg, rgba(20,20,24,0.9), rgba(10,10,12,0.9)); border:1px solid rgba(255,255,255,0.03); text-align:center; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+.logo-spin { width:76px; height:76px; margin:0 auto 12px; animation: spin 1700ms linear infinite; }
+@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
 </style>
 </head>
-<body class="theme-default">
+<body>
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo" id="logoSvg">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="white" opacity="0.04"/>
+          <path d="M18 46 L26 22 L32 22 L40 46 L34 46 L32 38 L28 38 L26 46 Z" fill="white" opacity="0.95"/>
+        </svg>
+      </div>
+      <div>
+        <div class="title">Berri Launcher</div>
+        <div class="sub" id="subText">Eaglerrinth • Modern • Sleek</div>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <div class="nav-btn active" data-tab="launcher"><div class="nav-icon">🏠</div><div class="nav-label"><span class="main">Launcher</span><span class="sub">Home</span></div></div>
+      <div class="nav-btn" data-tab="versions"><div class="nav-icon">🛠️</div><div class="nav-label"><span class="main">Versions</span><span class="sub">Select Version</span></div></div>
+      <div class="nav-btn" data-tab="mods"><div class="nav-icon">🧩</div><div class="nav-label"><span class="main">Mods</span><span class="sub">Eaglerrinth</span></div></div>
+      <div class="nav-btn" data-tab="themes"><div class="nav-icon">🎨</div><div class="nav-label"><span class="main">Themes</span><span class="sub">Colors</span></div></div>
+    </nav>
+    <div class="spacer"></div>
+    <div class="credits">Made by Berri</div>
+  </aside>
 
-<div class="sidebar" id="sidebar">
-  <h2>🫐 Berri</h2>
-  <button onclick="toggleSidebar()">☰</button>
-  <button onclick="openPanel('versions')">Versions</button>
-  <button onclick="openPanel('mods')">Mods</button>
-  <button onclick="openPanel('themes')">Themes</button>
-</div>
+  <!-- Main -->
+  <main class="main">
+    <div class="content">
+      <!-- Launcher panel -->
+      <section class="card" id="panel-launcher">
+        <div style="display:flex;gap:24px;align-items:center;justify-content:center;">
+          <div style="max-width:420px;">
+            <h1>Welcome to Berri Launcher</h1>
+            <p>Click Launch to select a version and start playing.</p>
+          </div>
+          <div style="text-align:center;">
+            <button class="play-btn" id="launcherLaunch">Launch</button>
+          </div>
+        </div>
+      </section>
 
-<div class="content">
-  <div id="versions" class="panel active">
-    <h1>Select Version</h1>
-    <button onclick="launchVersion('versions/1.5.2.html')">1.5.2</button>
-    <button onclick="launchVersion('versions/1.8.8.html')">1.8.8</button>
-    <button onclick="launchVersion('versions/1.12.html')">1.12</button>
-  </div>
+      <!-- Versions panel -->
+      <section class="card" id="panel-versions" style="display:none">
+        <div style="font-weight:800;font-size:20px">Select a Version</div>
+        <div class="versions-grid" id="versionsGrid">
+          <div class="ver-btn" data-url="versions/1.5.2.html">1.5.2</div>
+          <div class="ver-btn" data-url="versions/1.8.8.html">1.8.8</div>
+          <div class="ver-btn" data-url="versions/1.12.html">1.12</div>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="play-btn" id="versionsLaunch">Launch Selected Version</button>
+          <div id="versionError" style="color:#ff8b8b;display:none;">Select a version first.</div>
+        </div>
+      </section>
 
-  <div id="mods" class="panel">
-    <h1>Mods</h1>
-    <button onclick="openMods()">Open Mod Site</button>
-    <p>🚧 Mod Launcher: Work in Progress</p>
-  </div>
+      <!-- Mods panel -->
+      <section class="card" id="panel-mods" style="display:none">
+        <h2>Mods</h2>
+        <button class="play-btn" onclick="window.open('https://eaglerrinth.github.io/','_blank')">Open Mod Site</button>
+        <p>🚧 Mod Launcher: Work in Progress</p>
+      </section>
 
-  <div id="themes" class="panel">
-    <h1>Themes</h1>
-    <button onclick="setTheme('default')">Default</button>
-    <button onclick="setTheme('blue')">Blue</button>
-    <button onclick="setTheme('yellow')">Yellow</button>
-    <button onclick="setTheme('red')">Red</button>
-    <button onclick="setTheme('orange')">Orange</button>
-    <button onclick="setTheme('black')">Black</button>
-  </div>
+      <!-- Themes panel -->
+      <section class="card" id="panel-themes" style="display:none">
+        <h2>Themes</h2>
+        <button class="play-btn" onclick="setTheme('default')">Default</button>
+        <button class="play-btn" onclick="setTheme('blue')">Blue</button>
+        <button class="play-btn" onclick="setTheme('yellow')">Yellow</button>
+        <button class="play-btn" onclick="setTheme('red')">Red</button>
+        <button class="play-btn" onclick="setTheme('orange')">Orange</button>
+        <button class="play-btn" onclick="setTheme('black')">Black</button>
+      </section>
+
+      <!-- Loading overlay -->
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader-card">
+          <div class="logo-spin">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="76" height="76">
+              <circle cx="32" cy="32" r="30" fill="white" opacity="0.06"/>
+              <path d="M18 46 L26 22 L32 22 L40 46 L34 46 L32 38 L28 38 L26 46 Z" fill="white" opacity="0.95"/>
+            </svg>
+          </div>
+          <div style="font-weight:800;margin-bottom:8px">Loading client…</div>
+          <div style="font-size:12px;color:#9aa7b3;">Please wait...</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
 </div>
 
 <script>
-  function openPanel(id){
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
+const navButtons=document.querySelectorAll('.nav-btn');
+const panels={
+  launcher: document.getElementById('panel-launcher'),
+  versions: document.getElementById('panel-versions'),
+  mods: document.getElementById('panel-mods'),
+  themes: document.getElementById('panel-themes')
+};
+const launcherLaunchBtn=document.getElementById('launcherLaunch');
+const versionsGrid=document.getElementById('versionsGrid');
+const versionsLaunchBtn=document.getElementById('versionsLaunch');
+const versionError=document.getElementById('versionError');
+const loadingOverlay=document.getElementById('loadingOverlay');
+let selectedVersionBtn=null;
 
-  function launchVersion(path){
-    window.location.href = path;
-  }
+function activateTab(name){
+  navButtons.forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  Object.values(panels).forEach(p=>p.style.display='none');
+  if(panels[name]) panels[name].style.display='block';
+}
+navButtons.forEach(b=>b.addEventListener('click',()=>activateTab(b.dataset.tab)));
+activateTab('launcher');
 
-  function openMods(){
-    window.open("https://eaglerrinth.github.io/", "_blank");
-  }
+launcherLaunchBtn.addEventListener('click',()=>{
+  activateTab('versions');
+  versionsGrid.querySelectorAll('.ver-btn').forEach((v,i)=>{
+    setTimeout(()=>v.classList.add('fade-in'),i*120);
+  });
+});
 
-  function setTheme(theme){
-    document.body.className = "theme-" + theme;
-    localStorage.setItem("berri-theme", theme);
-  }
+versionsGrid.addEventListener('click',e=>{
+  let el=e.target;
+  while(el && !el.classList.contains('ver-btn')) el=el.parentElement;
+  if(!el) return;
+  if(selectedVersionBtn) selectedVersionBtn.classList.remove('selected');
+  selectedVersionBtn=el;
+  el.classList.add('selected');
+  versionError.style.display='none';
+});
 
-  window.onload = ()=>{
-    let saved = localStorage.getItem("berri-theme");
-    if(saved) document.body.className = "theme-" + saved;
-  }
+versionsLaunchBtn.addEventListener('click',()=>{
+  if(!selectedVersionBtn){versionError.style.display='block'; return;}
+  const url=selectedVersionBtn.dataset.url;
+  loadingOverlay.classList.add('show');
+  setTimeout(()=>{loadingOverlay.classList.remove('show'); window.open(url,'_blank');},1400);
+});
 
-  function toggleSidebar(){
-    document.getElementById('sidebar').classList.toggle('expanded');
+function setTheme(theme){
+  switch(theme){
+    case 'default': document.body.style.background = "linear-gradient(135deg, #3a3aff, #8a2be2)"; break;
+    case 'blue': document.body.style.background = "#0a0a2a"; break;
+    case 'yellow': document.body.style.background = "#2a2a00"; break;
+    case 'red': document.body.style.background = "#2a0000"; break;
+    case 'orange': document.body.style.background = "#2a1400"; break;
+    case 'black': document.body.style.background = "#000000"; break;
   }
+  localStorage.setItem("berri-theme",theme);
+}
+
+window.onload = ()=>{
+  let saved = localStorage.getItem("berri-theme");
+  if(saved) setTheme(saved);
+}
 </script>
-
 </body>
 </html>
