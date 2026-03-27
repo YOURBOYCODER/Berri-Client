@@ -2,52 +2,128 @@
 <html>
 <head>
   <title>Berri Client</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      background: linear-gradient(135deg, #3a3aff, #8a2be2);
+      color: white;
+      transition: background 0.4s;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: rgba(20, 20, 40, 0.95);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    }
+
+    .sidebar h2 { margin-bottom: 20px; }
+
+    .sidebar button {
+      margin: 8px 0;
+      padding: 12px;
+      background: #1f1f3a;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      transform: translateX(6px);
+      background: #2a2a5a;
+    }
+
+    .content { flex: 1; padding: 30px; }
+
+    .tab { display: none; animation: fadeIn 0.3s ease; }
+
+    .tab.active { display: block; }
+
+    .content button {
+      padding: 12px 18px;
+      margin: 8px;
+      background: #3a3aff;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .content button:hover { transform: scale(1.05); }
+
+    @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+
+    /* Themes */
+    .theme-blue { background: #0a0a2a; }
+    .theme-yellow { background: #2a2a00; }
+    .theme-red { background: #2a0000; }
+    .theme-orange { background: #2a1400; }
+    .theme-black { background: #000000; }
+    .theme-default { background: linear-gradient(135deg, #3a3aff, #8a2be2); }
+  </style>
 </head>
+
 <body class="theme-default">
 
-<div class="sidebar">
-  <h2>Berri</h2>
-
-  <button onclick="openTab('versions')">Versions</button>
-  <button onclick="openTab('mods')">Mods</button>
-  <button onclick="openTab('themes')">Themes</button>
-</div>
-
-<div class="content">
-
-  <!-- Versions -->
-  <div id="versions" class="tab active">
-    <h1>Versions</h1>
-
-    <button onclick="launchVersion('versions/1.5.2.html')">1.5.2</button>
-    <button onclick="launchVersion('versions/1.8.8.html')">1.8.8</button>
-    <button onclick="launchVersion('versions/1.12.html')">1.12</button>
+  <div class="sidebar">
+    <h2>🫐 Berri</h2>
+    <button onclick="openTab('versions')">Versions</button>
+    <button onclick="openTab('mods')">Mods</button>
+    <button onclick="openTab('themes')">Themes</button>
   </div>
 
-  <!-- Mods -->
-  <div id="mods" class="tab">
-    <h1>Mods</h1>
+  <div class="content">
+    <div id="versions" class="tab active">
+      <h1>Versions</h1>
+      <button onclick="launchVersion('versions/1.5.2.html')">1.5.2</button>
+      <button onclick="launchVersion('versions/1.8.8.html')">1.8.8</button>
+      <button onclick="launchVersion('versions/1.12.html')">1.12</button>
+    </div>
 
-    <button onclick="openMods()">Open Mod Site</button>
+    <div id="mods" class="tab">
+      <h1>Mods</h1>
+      <button onclick="openMods()">Open Mod Site</button>
+      <p>🚧 Mod Launcher: Work in Progress</p>
+    </div>
 
-    <p>Mod Launcher: Work in Progress</p>
+    <div id="themes" class="tab">
+      <h1>Themes</h1>
+      <button onclick="setTheme('default')">Default</button>
+      <button onclick="setTheme('blue')">Blue</button>
+      <button onclick="setTheme('yellow')">Yellow</button>
+      <button onclick="setTheme('red')">Red</button>
+      <button onclick="setTheme('orange')">Orange</button>
+      <button onclick="setTheme('black')">Black</button>
+    </div>
   </div>
 
-  <!-- Themes -->
-  <div id="themes" class="tab">
-    <h1>Themes</h1>
+  <script>
+    function openTab(tabName){
+      document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+    }
 
-    <button onclick="setTheme('default')">Default (Blue/Purple)</button>
-    <button onclick="setTheme('blue')">Blue</button>
-    <button onclick="setTheme('yellow')">Yellow</button>
-    <button onclick="setTheme('red')">Red</button>
-    <button onclick="setTheme('orange')">Orange</button>
-    <button onclick="setTheme('black')">Black</button>
-  </div>
+    function launchVersion(path){ window.location.href = path; }
+    function openMods(){ window.open("https://eaglerrinth.github.io/", "_blank"); }
+    function setTheme(theme){
+      document.body.className = "theme-" + theme;
+      localStorage.setItem("berri-theme", theme);
+    }
 
-</div>
+    window.onload = ()=>{
+      let saved = localStorage.getItem("berri-theme");
+      if(saved) document.body.className = "theme-" + saved;
+    }
+  </script>
 
-<script src="script.js"></script>
 </body>
 </html>
